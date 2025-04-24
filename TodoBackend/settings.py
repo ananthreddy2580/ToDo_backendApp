@@ -15,6 +15,7 @@ ALLOWED_HOSTS = ["*"]
 
 # CORS & CSRF Setup
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # CORS_ALLOW_ALL_ORIGINS = False  # Set False for security
@@ -41,7 +42,8 @@ EMAIL_HOST_PASSWORD = 'ahwu ukgz dbdo igpk' # Not your
 
 # Allow frontend origin
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your React frontend
+    "http://localhost:5173",
+    "https://todo-app-9f6l.vercel.app",  # Your React frontend
 ]
 
 # settings.py
@@ -50,8 +52,8 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_COOKIE_SAMESITE = "Lax"  # or "None" for cross-domain
 CSRF_COOKIE_SECURE = False    # Only True for HTTPS
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
 
 
 # CSRF_COOKIE_SAMESITE = 'None'  # Allow cookies to be sent with cross-origin requests
@@ -121,19 +123,34 @@ TEMPLATES = [
 WSGI_APPLICATION = 'TodoBackend.wsgi.application'
 
 # Database (MySQL)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'todo',
+#         'USER': 'root',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         }
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'todo',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME', 'todo'),  # Default to 'todo' if not set
+        'USER': os.getenv('DB_USER', 'root'),  # Default to 'root' if not set
+        'PASSWORD': os.getenv('DB_PASSWORD', '1234'),  # Default to '1234' if not set
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # Default to 'localhost' if not set
+        'PORT': os.getenv('DB_PORT', '3306'),  # Default to '3306' if not set
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
+        },
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
