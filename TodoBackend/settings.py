@@ -38,13 +38,17 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'pythonmail17@gmail.com'  # Your gmail address
 EMAIL_HOST_PASSWORD = 'ahwu ukgz dbdo igpk' # Not your
 
+ALLOWED_HOSTS = ["*"]
+
+
+CORS_ALLOW_ALL_ORIGINS = False  # Set False for security
 
 
 # Allow frontend origin
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://todo-app-9f6l.vercel.app",  # Your React frontend
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "https://todo-app-9f6l.vercel.app",  # Your React frontend
+# ]
 
 # settings.py
 
