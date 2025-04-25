@@ -27,6 +27,10 @@ CSRF_COOKIE_SECURE = False  # Set to True to only send the cookie over HTTPS
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access the cookie (False is default)
 CSRF_COOKIE_SAMESITE = "Lax"  # Helps prevent CSRF attacks during cross-origin navigation (options: Lax, Strict, None)
 
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -53,11 +57,32 @@ CORS_ALLOW_ALL_ORIGINS = False  # Set False for security
 # settings.py
 
 
-CSRF_COOKIE_SAMESITE = "Lax"  # or "None" for cross-domain
-CSRF_COOKIE_SECURE = False    # Only True for HTTPS
+# CSRF_COOKIE_SAMESITE = "Lax"  # or "None" for cross-domain
+# CSRF_COOKIE_SECURE = False    # Only True for HTTPS
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
+# CSRF_TRUSTED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
+
+# ✅ Enable secure cookies for cross-site requests (HTTPS)
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = "None"
+
+# ✅ CORS settings to allow React frontend access
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173","https://todo-app-9f6l.vercel.app"]
+CORS_ALLOWED_ORIGINS = [
+    "https://todo-app-9f6l.vercel.app",
+    "http://localhost:5173"
+]
+
+# ✅ Allow cross-origin CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    "https://todo-app-9f6l.vercel.app",
+    "http://localhost:5173"
+]
+
 
 
 # CSRF_COOKIE_SAMESITE = 'None'  # Allow cookies to be sent with cross-origin requests
@@ -97,13 +122,6 @@ REST_FRAMEWORK = {
     )
 }
 
-# Optionally configure token expiry
-# from datetime import timedelta
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-# }
 
 # Templates
 ROOT_URLCONF = 'TodoBackend.urls'
