@@ -60,10 +60,10 @@ def sign_up(request):
                 user_email=email,
                 password=hashedPassword,
             )
-            return JsonResponse({"message": "User Created Successfully"})
+            return JsonResponse({"message": "User Created Successfully","status":"failed"})
         except Exception as e:
             # print("Error:", str(e))
-            return JsonResponse({"message": "User Created Failed"})
+            return JsonResponse({"message": "User Created Failed","status":"failed"})
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
