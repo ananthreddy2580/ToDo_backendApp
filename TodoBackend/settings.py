@@ -159,19 +159,38 @@ WSGI_APPLICATION = 'TodoBackend.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv('DB_NAME', 'todo'),  # Default to 'todo' if not set
+#         'USER': os.getenv('DB_USER', 'root'),  # Default to 'root' if not set
+#         'PASSWORD': os.getenv('DB_PASSWORD', '1234'),  # Default to '1234' if not set
+#         'HOST': os.getenv('DB_HOST', 'localhost'),  # Default to 'localhost' if not set
+#         'PORT': os.getenv('DB_PORT', '3306'),  # Default to '3306' if not set
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
+
+from urllib.parse import urlparse
+
+# Parse the MYSQL_URL (if it's set as an environment variable or you want to hardcode it)
+mysql_url = os.getenv('MYSQL_URL', 'mysql://root:simpeiLKQRxkGZhbmNIzsZoWQeogyrjN@switchback.proxy.rlwy.net:30612/railway')
+url = urlparse(mysql_url)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'todo'),  # Default to 'todo' if not set
-        'USER': os.getenv('DB_USER', 'root'),  # Default to 'root' if not set
-        'PASSWORD': os.getenv('DB_PASSWORD', '1234'),  # Default to '1234' if not set
-        'HOST': os.getenv('DB_HOST', 'localhost'),  # Default to 'localhost' if not set
-        'PORT': os.getenv('DB_PORT', '3306'),  # Default to '3306' if not set
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'NAME': url.path[1:],  # Extract the database name from the URL path
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname,
+        'PORT': url.port,
     }
 }
+
+
 
 
 # Password validation
