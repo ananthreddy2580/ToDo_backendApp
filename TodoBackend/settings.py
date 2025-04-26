@@ -145,19 +145,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'TodoBackend.wsgi.application'
 
 # Database (MySQL)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'todo',
-#         'USER': 'root',
-#         'PASSWORD': '1234',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         }
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'todo',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -182,7 +182,7 @@ url = urlparse(mysql_url)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': url.path[1:],  # Extract the database name from the URL path
+        'NAME': url.path[1:],
         'USER': url.username,
         'PASSWORD': url.password,
         'HOST': url.hostname,

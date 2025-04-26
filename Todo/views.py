@@ -55,59 +55,19 @@ def sign_up(request):
             password = sign_up_data.get("password")
             hashedPassword = make_password(password)
 
+            # Create user
             user = UserRegistration.objects.create(
                 user_fullname=fullname,
                 user_email=email,
                 password=hashedPassword,
             )
-            return JsonResponse({"message": "User Created Successfully","status":"success"})
+            print("hiii")
+            
+            # Return a success response
+            return JsonResponse({"message": "User Created Successfully", "status": "success"})
         except Exception as e:
-            # print("Error:", str(e))
-            return JsonResponse({"message": "User Created Failed","status":"failed"})
-
-
-
-# from django.http import JsonResponse
-# from django.contrib.auth.hashers import make_password
-# import json
-# from .models import UserRegistration
-
-# @csrf_protect
-# def sign_up(request):
-#     print("12")
-#     if request.method == "POST":
-#         try:
-#             # Parse JSON data from the request body
-#             sign_up_data = json.loads(request.body)
-#             fullname = sign_up_data.get("fullname")
-#             email = sign_up_data.get("email")
-#             password = sign_up_data.get("password")
-#             print("hii")
-
-#             # Ensure required fields are provided
-#             if not fullname or not email or not password:
-#                 return JsonResponse({"message": "All fields are required", "status": "failed"})
-
-#             # Hash the password
-#             hashedPassword = make_password(password)
-
-#             # Create the user in the database
-#             user = UserRegistration.objects.create(
-#                 user_fullname=fullname,
-#                 user_email=email,
-#                 password=hashedPassword,
-#             )
-
-#             # Return success response
-#             return JsonResponse({"message": "User Created Successfully", "status": "success"})
-
-#         except Exception as e:
-#             # Log the error for debugging
-#             print("Error:", str(e))
-#             return JsonResponse({"message": "User Creation Failed", "status": "failed"})
-
-#     # Handle cases where the request is not POST
-#     return JsonResponse({"message": "Invalid request method", "status": "failed"})
+            # Log the error or print if necessary
+            return JsonResponse({"message": f"User Creation Failed: {str(e)}", "status": "failed"})
 
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
