@@ -86,7 +86,7 @@ def send_reset_link(request):
         if user:
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            reset_url = f"http://localhost:5173/reset-password/{uidb64}/{token}" 
+            reset_url = f" https://todo-backendapp.onrender.com/reset-password/{uidb64}/{token}" 
             send_mail(
                 subject="Password Reset for Your App",
                 message=f"""Hi {user.user_fullname},
