@@ -75,14 +75,14 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "https://todo-app-9f6l.vercel.app",
     "https://todo-app-six-chi-17.vercel.app",
-    "http://localhost:5173"
+    "http://localhost:5173",
 ]
 
 # ✅ Allow cross-origin CSRF protection
 CSRF_TRUSTED_ORIGINS = [
     "https://todo-app-9f6l.vercel.app",
     "https://todo-app-six-chi-17.vercel.app",
-    "http://localhost:5173"
+    "http://localhost:5173",
 ]
 
 
