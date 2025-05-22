@@ -35,7 +35,7 @@ def sign_in(request):
             user = UserRegistration.objects.filter(user_email=email).first()
             if user:
                 if check_password(password, user.password):
-                    return JsonResponse({"message": "Login successful", "status": "success"})
+                    return JsonResponse({"message": "Login successful", "status": "success", "userId":str(user.id)})
                 else:
                     return JsonResponse({"message": "Password does not match", "status": "failed"})
 
@@ -53,15 +53,28 @@ def sign_up(request):
             fullname = sign_up_data.get("fullname")
             email = sign_up_data.get("email")
             password = sign_up_data.get("password")
+            confirmPassword = sign_up_data.get("confirmPassword")
             hashedPassword = make_password(password)
-
-            # Create user
+            if not fullname:
+                return JsonResponse({"message": "Fullname is required", "status": "failed"})
+            if not email:
+                return JsonResponse({"message": "Email is required", "status": "failed"})
+            if not password:
+                return JsonResponse({"message": "Password is required", "status": "failed"})
+            if not confirmPassword:
+                return JsonResponse({"message": "Confirm Password is required", "status": "failed"})
+            user = UserRegistration.objects.filter(user_email=email).first()
+            if(user):
+                return JsonResponse({"message": "User already exists", "status": "failed"})
+            
+            if(password != confirmPassword):
+                return JsonResponse({"message": "Passwords do not match", "status": "failed"})
             user = UserRegistration.objects.create(
                 user_fullname=fullname,
                 user_email=email,
                 password=hashedPassword,
             )
-            print("hiii")
+
             
             # Return a success response
             return JsonResponse({"message": "User Created Successfully", "status": "success"})
@@ -88,25 +101,26 @@ def send_reset_link(request):
             token = default_token_generator.make_token(user)
             reset_url = f"https://todo-app-9f6l.vercel.app/reset-password/{uidb64}/{token}" 
             send_mail(
-                subject="Password Reset for Your App",
-                message=f"""Hi {user.user_fullname},
+            subject="Password Reset for Your App",
+            message=f"""Hi {user.user_fullname},
 
-                You requested to reset your password.
+You requested to reset your password.
 
-                Please click the link below to reset:
+Please click the link below to reset:
 
-                {reset_url}
+{reset_url}
 
-                Thank you,
-                The ToDo Team
-                """,
+Thank you,
+The ToDo Team
+""",
                         from_email="pythonmail17@gmail.com",
                         recipient_list=[email],
                         fail_silently=False,
                 )
-        return JsonResponse ({"message":"Email sent","status":"success"})
+            return JsonResponse ({"message":"Email sent","status":"success"})
+        else:
+            return JsonResponse({"message": "User does not exist", "status": "failed"})
     except Exception as e:
-        print(e)
         return JsonResponse({"message": "Failed to send reset link", "status": "failed"})
     
 @csrf_protect
@@ -126,5 +140,55 @@ def update_password(request, uidb64, token):
         else:
             return JsonResponse({"message": "Invalid or Expired Token", "status":"failed"})
     except Exception as e:
-        print("Error while resetting password:", str(e))
         return JsonResponse({"message": "Failed to update password", "status": "failed"})
+
+@csrf_protect
+@api_view(['POST'])
+def check_workspaces_count(request):
+    try:
+        data = json.loads(request.body)
+        user = data.get("user")
+        workspace_count = Workspace.objects.filter(workspace_related_users=user).count()
+        return JsonResponse({'workspace_count': workspace_count })
+    except Exception as e:
+        return JsonResponse({'error': str(e), "status":"failed"})
+        
+
+@csrf_protect
+@api_view(['POST'])
+def add_workspace(request):
+    try:
+        data = json.loads(request.body)
+        workspace_name = data.get('workspaceName')
+        workspace_desc = data.get('workspaceDesc')
+        user_ids = data.get('userId')
+        
+        if not workspace_name or not workspace_desc:
+            return JsonResponse({'message': 'Workspace details are required.', "status": "failed"})
+        if not user_ids:
+            return JsonResponse({'message': 'Go back and login again.', "status": "failed"})
+
+        workspace = Workspace.objects.create(
+            workspace_name=workspace_name,
+            workspace_desc=workspace_desc
+        )
+        user = UserRegistration.objects.get(id=user_ids)
+        workspace.workspace_related_users.add(user)
+        return JsonResponse({'message': 'Workspace created successfully.',"status": "success"})
+    except Exception as e:
+        return JsonResponse({'message': str(e), 'status':'failed'})
+    
+    
+@csrf_protect
+@api_view(['POST'])
+def get_mail(request):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('user')
+        print(user_id)
+        user = UserRegistration.objects.get(id=user_id)
+        email = user.user_email
+        print(email)
+        return JsonResponse({'email': email,'status':'success'})
+    except Exception as e:
+        return JsonResponse({'error': str(e), "status": "failed"})

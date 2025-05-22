@@ -10,7 +10,7 @@ class UserRegistration(models.Model):
     password = models.TextField()
     created_at = models.DateTimeField(default=timezone.now) 
     last_login = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    # is_active = models.BooleanField(default=True)
 
     EMAIL_FIELD = 'user_email'  # <-- recommended
     USERNAME_FIELD = 'user_email'  # <-- optional if you do login with email
@@ -21,5 +21,20 @@ class UserRegistration(models.Model):
 
     def __str__(self):
         return self.user_email
+
+
+class Workspace(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    workspace_name = models.TextField()
+    workspace_desc = models.TextField()
+    workspace_related_users = models.ManyToManyField(
+        UserRegistration,
+        related_name='workspaces'
+    ) 
+    created_at = models.DateTimeField(default=timezone.now) 
+    
+
+    def __str__(self):
+        return self.workspace_name
 
 
